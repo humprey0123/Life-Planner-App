@@ -1,0 +1,21 @@
+.task-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+  background: #171717;
+  padding: 16px;
+  border: 1px solid #2d2d2d;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.task-item input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.task-item.done span {
+  text-decoration: line-through;
+  color: gray;
+}
