@@ -22,6 +22,14 @@ const events = [
     date: "October 5, 2025",
     location: "Davao City",
     link: "https://uidesignmeet.com"
+  },
+  {
+    id: 4,
+    image: "https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0",
+    title: "Design & UI Meetup",
+    date: "October 5, 2025",
+    location: "Davao City",
+    link: "https://uidesignmeet.com"
   }
 ];
 

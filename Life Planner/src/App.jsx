@@ -9,7 +9,12 @@ import events from './data/events';
 function App() {
   return (
     <>
-      <h1>Life Planner 🧠</h1>
+      <header className='planner-header'>
+        <h1>Life Planner 🧠</h1>
+        <div className='user-info'><span>Welcome, Ian</span>
+        <button>Logout</button>
+        </div>
+      </header>
 
       <div className="dashboard-row">
         <section>
