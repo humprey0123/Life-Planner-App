@@ -21,6 +21,25 @@ function App() {
   });
   const [showGoalForm, setShowGoalForm] = useState(false);
   const [newGoalText, setNewGoalText] = useState('');
+  // Defined Event
+  const [eventList, setEventList] = useState(() => {
+  const savedEvents = localStorage.getItem('lifeplanner-events');
+  return savedEvents ? JSON.parse(savedEvents) : events;
+  });
+
+  // Save for Event List to Local Storage
+  useEffect(() => {
+    localStorage.setItem('lifeplanner-events', JSON.stringify(eventList));
+  }, [eventList]);
+
+    const [showEventForm, setShowEventForm] = useState(false);
+    const [newEvent, setNewEvent] = useState({
+      title: '',
+      date: '',
+      location: '',
+      link: '',
+      image: ''
+    });
 
     // Save for Task List to Local Storage
   useEffect(() => {
@@ -69,6 +88,18 @@ function App() {
       )
     );
   }
+
+  function handleAddEvent(e) {
+  e.preventDefault();
+  const newEventObj = {
+    id: Date.now(),
+    ...newEvent
+  };
+  setEventList([newEventObj, ...eventList]);
+  setNewEvent({ title: '', date: '', location: '', link: '', image: '' });
+  setShowEventForm(false);
+}
+
 
   return (
     <>
@@ -167,25 +198,81 @@ function App() {
 
       </div>
 
-      <section>
-        {/* EVENTS */}
-        <h2>📅 Events</h2>
-        <div className='content-scroll'>
-          <div className="event-list">
-            {events.map(event => (
-              <EventCard 
-                key={event.id}
-                id={event.id}
-                image={event.image} 
-                title={event.title}
-                date={event.date}
-                location={event.location}
-                link={event.link}
-              />
-            ))}
+        <section>
+          <div className="section-header">
+            <h2>📅 Events</h2>
+            <button onClick={() => setShowEventForm(!showEventForm)}>
+              {showEventForm ? "Cancel" : "Add Event"}
+            </button>
           </div>
-        </div>
-      </section>
+
+          {/* Event Form (toggleable) */}
+          {showEventForm && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h3>Add New Event</h3>
+                <form onSubmit={handleAddEvent} className="modal-form">
+                  <input
+                    type="text"
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                    placeholder="Title"
+                    required
+                  />
+                  <input
+                    type="date"
+                    value={newEvent.date}
+                    onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                    required
+                  />
+                  <input
+                    type="text"
+                    value={newEvent.location}
+                    onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                    placeholder="Location"
+                  />
+                  <input
+                    type="url"
+                    value={newEvent.link}
+                    onChange={(e) => setNewEvent({ ...newEvent, link: e.target.value })}
+                    placeholder="Link"
+                  />
+                  <input
+                    type="url"
+                    value={newEvent.image}
+                    onChange={(e) => setNewEvent({ ...newEvent, image: e.target.value })}
+                    placeholder="Image URL"
+                  />
+                  <div className="modal-buttons">
+                    <button type="button" onClick={() => setShowEventForm(false)}>Cancel</button>
+                    <button type="submit">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+
+
+
+          {/* Render Events */}
+          <div className='content-scroll'>
+            <div className="event-list">
+              {eventList.map(event => (
+                <EventCard
+                  key={event.id}
+                  id={event.id}
+                  image={event.image}
+                  title={event.title}
+                  date={event.date}
+                  location={event.location}
+                  link={event.link}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
     </>
   );
 }
