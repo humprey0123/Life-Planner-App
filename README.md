@@ -1,15 +1,34 @@
-# Life Planner App
+# Life Planner App 🧠 ( Made on Dark mode, will work on light mode soon)
 
-A personal productivity dashboard built with React and CSS.
-This app helps users manage their daily life through Tasks, Goals, and Events. It’s fully responsive and designed to reflect a real-world user scenario.
+A personal productivity dashboard built with React and CSS.  
+The app helps users organize their day through **Tasks**, **Goals**, and **Events**, offering a clean and responsive interface that mimics real-life usage.
 
 ## Features
-- ✅ Task list with add, delete and edit feature.
-- 🎯 Goal progress monitoring
-- 📅 Horizontally scrollable events section with images
+- ✅ **Task Management**
+  - Add, edit, delete tasks
+  - Local storage support
+  - Visual completion toggle with checkbox
+    
+- 🎯 **Goal Tracker**
+  - Add, delete, and update progress in 10% increments
+  - Progress bar with dynamic visuals
+  - Local storage support
+    
+- 📅 **Events Section**
+  - Add events via popup modal
+  - Responsive grid layout (3 per row on desktop)
+  - Live links and image previews ( working on image previews.)
+  - local storage support
+    
+- 📱 **Fully Responsive UI**
+  - Optimized layout for mobile, tablet, and desktop
 
 ## Tech Stack
 - React + Vite
-- JSX Components
+- JSX Functional Components
 - CSS Grid & Flexbox
-- Static data (extendable to backend)
+- CSS Variables for theme adaptation (soon)
+- Local Storage for persistent data
+
+---
+
