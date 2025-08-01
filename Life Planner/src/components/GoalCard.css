@@ -1,7 +1,56 @@
+
+
 .goal-card {
-  border: 1px solid #2d2d2d;
-  padding: 5px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  background-color: #171717;
+  background-color: #2a2a2a;
+  padding: 5px 10px 10px 10px;
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.goal-card button {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.goal-card button:hover {
+  background-color: #555;
+}
+
+/* Progress bar container */
+.progress-bar {
+  background: #333;
+  border-radius: 6px;
+  height: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+/* Fill element */
+.progress-bar-fill {
+  background: #4caf50;
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+/* Achieved message */
+.achieved {
+  color: lightgreen;
+  font-weight: bold;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 200px;
 }

@@ -8,15 +8,29 @@ import events from './data/events';
 import { useState, useEffect } from 'react';
 
 function App() {
+  // Defined Task List
   const [showForm, setShowForm] = useState(false);
   const [taskList, setTaskList] = useState(() => {
   const savedTasks = localStorage.getItem('lifeplanner-tasks');
   return savedTasks ? JSON.parse(savedTasks) : tasks;
   });
+  // Defined Goal
+  const [goalList, setGoalList] = useState(() => {
+    const savedGoals = localStorage.getItem('lifeplanner-goals');
+    return savedGoals ? JSON.parse(savedGoals) : goals;
+  });
+  const [showGoalForm, setShowGoalForm] = useState(false);
+  const [newGoalText, setNewGoalText] = useState('');
+
+    // Save for Task List to Local Storage
   useEffect(() => {
   localStorage.setItem('lifeplanner-tasks', JSON.stringify(taskList));
   }, [taskList]);
   const [newTask, setNewTask] = useState('');
+  // Save for Goal List to Local Storage
+  useEffect(() => {
+  localStorage.setItem('lifeplanner-goals', JSON.stringify(goalList));
+}, [goalList]);
 
   function handleAddTask(e) {
     e.preventDefault();
@@ -42,6 +56,19 @@ function App() {
     );
   }
 
+  function handleDeleteGoal(id) {
+  setGoalList(goalList.filter(goal => goal.id !== id));
+  }
+
+  function handleUpdateProgress(id, amount) {
+    setGoalList(prevGoals =>
+      prevGoals.map(goal =>
+        goal.id === id
+          ? { ...goal, progress: Math.max(0, Math.min(100, goal.progress + amount)) }
+          : goal
+      )
+    );
+  }
 
   return (
     <>
@@ -52,8 +79,9 @@ function App() {
           <button>Logout</button>
         </div>
       </header>
-
+                    
       <div className="dashboard-row">
+              {/* TASKS */}
         <section>
           <h2>✅ Tasks</h2>
           <div className='content-scroll'>
@@ -81,7 +109,6 @@ function App() {
               <button type="submit">Save</button>
             </form>
           )}
-            
                     {/* Toggle Button */}
             <button onClick={() => setShowForm(!showForm)}>
               {showForm ? "Cancel" : "Add Task"}
@@ -90,21 +117,58 @@ function App() {
 
 
         <section>
+              {/* GOALS */}
           <h2>🎯 Goals</h2>
-          <div className='content-scroll'>
-            {goals.map(goal => (
+          <div className="content-scroll">
+            {goalList.map(goal => (
               <GoalCard
                 key={goal.id}
                 id={goal.id}
                 goal={goal.goal}
                 progress={goal.progress}
+                onDelete={handleDeleteGoal}
+                onUpdateProgress={handleUpdateProgress}
               />
             ))}
           </div>
+
+          {/* Goal Form */}
+          {showGoalForm && (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const newGoal = {
+                  id: Date.now(),
+                  goal: newGoalText,
+                  progress: 0
+                };
+                setGoalList([newGoal, ...goalList]);
+                setNewGoalText('');
+                setShowGoalForm(false);
+              }}
+              className="task-form"
+            >
+              <input
+                type="text"
+                value={newGoalText}
+                onChange={(e) => setNewGoalText(e.target.value)}
+                placeholder="Enter your goal..."
+                required
+              />
+              <button type="submit">Save</button>
+            </form>
+          )}
+
+          {/* Toggle Button */}
+          <button onClick={() => setShowGoalForm(!showGoalForm)}>
+            {showGoalForm ? "Cancel" : "Add Goal"}
+          </button>
         </section>
+
       </div>
 
       <section>
+        {/* EVENTS */}
         <h2>📅 Events</h2>
         <div className='content-scroll'>
           <div className="event-list">
