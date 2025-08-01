@@ -4,7 +4,7 @@ A personal productivity dashboard built with React and CSS.
 This app helps users manage their daily life through Tasks, Goals, and Events. It’s fully responsive and designed to reflect a real-world user scenario.
 
 ## Features
-- ✅ Task list tracking
+- ✅ Task list with add, delete and edit feature.
 - 🎯 Goal progress monitoring
 - 📅 Horizontally scrollable events section with images
 
