@@ -49,7 +49,13 @@ function App() {
   // Save for Goal List to Local Storage
   useEffect(() => {
   localStorage.setItem('lifeplanner-goals', JSON.stringify(goalList));
-}, [goalList]);
+  }, [goalList]);
+
+  function handleToggleTaskDone(id) {
+  setTaskList(taskList.map(task =>
+    task.id === id ? { ...task, completed: !task.completed } : task
+  ));
+  }
 
   function handleAddTask(e) {
     e.preventDefault();
@@ -123,6 +129,7 @@ function App() {
                 task={task} 
                 onDelete={handleDeleteTask}
                 onEdit={handleEditTask}
+                onToggleDone={handleToggleTaskDone}
               />
             ))}
           </div>
