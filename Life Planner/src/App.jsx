@@ -104,7 +104,7 @@ function App() {
   return (
     <>
       <header className='planner-header'>
-        <h1>Life Planner 🧠</h1>
+        <h1>Life Planner 📘✅📆</h1>
         <div className='user-info'>
           <span>Welcome, Ian</span>
           <button>Logout</button>
