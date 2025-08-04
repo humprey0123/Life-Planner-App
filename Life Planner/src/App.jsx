@@ -81,6 +81,7 @@ function App() {
     );
   }
 
+
   function handleDeleteGoal(id) {
   setGoalList(goalList.filter(goal => goal.id !== id));
   }
@@ -104,7 +105,21 @@ function App() {
   setEventList([newEventObj, ...eventList]);
   setNewEvent({ title: '', date: '', location: '', link: '', image: '' });
   setShowEventForm(false);
+  }
+
+  function handleDeleteEvent(id) {
+  setEventList(eventList.filter(event => event.id !== id));
+  }
+
+  function handleEditEvent(id, updatedEvent) {
+  setEventList(prevList =>
+    prevList.map(event =>
+      event.id === id ? { ...event, ...updatedEvent } : event
+    )
+  );
 }
+
+
 
 
   return (
@@ -123,14 +138,16 @@ function App() {
           <h2>✅ Tasks</h2>
           <div className='content-scroll'>
             {/* Render Task List */}
-            {taskList.map(task => (
-              <TaskItem 
-                key={task.id} 
-                task={task} 
-                onDelete={handleDeleteTask}
-                onEdit={handleEditTask}
-                onToggleDone={handleToggleTaskDone}
-              />
+            {[...taskList]
+              .sort((a, b) => a.completed - b.completed)
+              .map(task => (
+                <TaskItem 
+                  key={task.id} 
+                  task={task} 
+                  onDelete={handleDeleteTask}
+                  onEdit={handleEditTask}
+                  onToggleDone={handleToggleTaskDone}
+                />
             ))}
           </div>
 
@@ -202,7 +219,6 @@ function App() {
             {showGoalForm ? "Cancel" : "Add Goal"}
           </button>
         </section>
-
       </div>
 
         <section>
@@ -265,16 +281,20 @@ function App() {
           {/* Render Events */}
           <div className='content-scroll'>
             <div className="event-list">
-              {eventList.map(event => (
-                <EventCard
-                  key={event.id}
-                  id={event.id}
-                  image={event.image}
-                  title={event.title}
-                  date={event.date}
-                  location={event.location}
-                  link={event.link}
-                />
+              {[...eventList]
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map(event => (
+                  <EventCard
+                    key={event.id}
+                    id={event.id}
+                    image={event.image}
+                    title={event.title}
+                    date={event.date}
+                    location={event.location}
+                    link={event.link}
+                    onDelete={handleDeleteEvent}
+                    onEdit={handleEditEvent}
+                  />
               ))}
             </div>
           </div>
