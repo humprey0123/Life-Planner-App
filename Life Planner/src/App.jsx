@@ -1,7 +1,7 @@
 import './App.css';
 import TasksSection from './components/TaskSection';
 import tasks from './data/tasks';
-import GoalCard from './components/GoalCard';
+import GoalSection from './components/GoalSection';
 import goals from './data/goals';
 import EventCard from './components/EventCard';
 import events from './data/events';
@@ -156,6 +156,33 @@ function App() {
       </section>
     )}
 
+        {activeTab === "goals" && (
+      <section>
+        <div className='tab-scroll'>
+          <GoalSection
+            goalList={goalList}
+            showGoalForm={showGoalForm}
+            setShowGoalForm={setShowGoalForm}
+            newGoalText={newGoalText}
+            setNewGoalText={setNewGoalText}
+            onAddGoal={(e) => {
+              e.preventDefault();
+              const newGoal = {
+                id: Date.now(),
+                goal: newGoalText,
+                progress: 0
+              };
+              setGoalList([newGoal, ...goalList]);
+              setNewGoalText('');
+              setShowGoalForm(false);
+            }}
+            onDeleteGoal={handleDeleteGoal}
+            onUpdateProgress={handleUpdateProgress}
+          />
+        </div>
+      </section>
+    )}
+
     {activeTab === "home" && (
       <section>
       <div className="dashboard-row">
@@ -174,54 +201,28 @@ function App() {
             />
         </section>
 
-
-        <section>
+        <section className="content-scroll">
               {/* GOALS */}
-          <h2>🎯 Goals</h2>
-          <div className="content-scroll">
-            {goalList.map(goal => (
-              <GoalCard
-                key={goal.id}
-                id={goal.id}
-                goal={goal.goal}
-                progress={goal.progress}
-                onDelete={handleDeleteGoal}
-                onUpdateProgress={handleUpdateProgress}
-              />
-            ))}
-          </div>
-
-          {/* Goal Form */}
-          {showGoalForm && (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const newGoal = {
-                  id: Date.now(),
-                  goal: newGoalText,
-                  progress: 0
-                };
-                setGoalList([newGoal, ...goalList]);
-                setNewGoalText('');
-                setShowGoalForm(false);
-              }}
-              className="task-form"
-            >
-              <input
-                type="text"
-                value={newGoalText}
-                onChange={(e) => setNewGoalText(e.target.value)}
-                placeholder="Enter your goal..."
-                required
-              />
-              <button type="submit">Save</button>
-            </form>
-          )}
-
-          {/* Toggle Button */}
-          <button onClick={() => setShowGoalForm(!showGoalForm)}>
-            {showGoalForm ? "Cancel" : "Add Goal"}
-          </button>
+          <GoalSection
+            goalList={goalList}
+            showGoalForm={showGoalForm}
+            setShowGoalForm={setShowGoalForm}
+            newGoalText={newGoalText}
+            setNewGoalText={setNewGoalText}
+            onAddGoal={(e) => {
+              e.preventDefault();
+              const newGoal = {
+                id: Date.now(),
+                goal: newGoalText,
+                progress: 0
+              };
+              setGoalList([newGoal, ...goalList]);
+              setNewGoalText('');
+              setShowGoalForm(false);
+            }}
+            onDeleteGoal={handleDeleteGoal}
+            onUpdateProgress={handleUpdateProgress}
+          />
         </section>
       </div>
 

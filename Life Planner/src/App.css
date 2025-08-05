@@ -228,13 +228,13 @@ h2 {
 }
 
 .content-scroll {
-  max-height: 400px; /* adjust individually if needed via inline styles or another class */
+  max-height: 65vh; /* adjust individually if needed via inline styles or another class */
   overflow-y: auto;
-  display: flex;
   flex-direction: column;
   gap: 12px;
   padding-right: 4px;
 }
+
 
 /* Optional: scrollbar style */
 .content-scroll::-webkit-scrollbar {
@@ -254,7 +254,6 @@ h2 {
 .tab-scroll {
   max-height: 74vh; /* adjust individually if needed via inline styles or another class */
   overflow-y: auto;
-  display: flex;
   flex-direction: column;
   gap: 12px;
   padding-right: 4px;
