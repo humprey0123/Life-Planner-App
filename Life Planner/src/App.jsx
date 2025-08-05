@@ -1,5 +1,5 @@
 import './App.css';
-import TaskItem from './components/TaskItem';
+import TasksSection from './components/TaskSection';
 import tasks from './data/tasks';
 import GoalCard from './components/GoalCard';
 import goals from './data/goals';
@@ -8,6 +8,8 @@ import events from './data/events';
 import { useState, useEffect } from 'react';
 
 function App() {
+  const [activeTab, setActiveTab] = useState("home");
+
   // Defined Task List
   const [showForm, setShowForm] = useState(false);
   const [taskList, setTaskList] = useState(() => {
@@ -120,54 +122,56 @@ function App() {
 }
 
 
-
-
   return (
     <>
       <header className='planner-header'>
         <h1>Life Planner 📘✅📆</h1>
+        <div className="tab-buttons">
+          <button onClick={() => setActiveTab("home")}>🏠 Home</button>
+          <button onClick={() => setActiveTab("tasks")}>✅ Tasks</button>
+          <button onClick={() => setActiveTab("goals")}>🎯 Goals</button>
+          <button onClick={() => setActiveTab("events")}>📅 Events</button>
+        </div>
         <div className='user-info'>
           <span>Welcome, Ian</span>
           <button>Logout</button>
         </div>
       </header>
-                    
+
+    {activeTab === "tasks" && (
+      <section>
+        <div className='tab-scroll'>
+          <TasksSection
+            taskList={taskList}
+            newTask={newTask}
+            setNewTask={setNewTask}
+            showForm={showForm}
+            setShowForm={setShowForm}
+            onAdd={handleAddTask}
+            onDelete={handleDeleteTask}
+            onEdit={handleEditTask}
+            onToggleDone={handleToggleTaskDone}
+          />
+        </div>
+      </section>
+    )}
+
+    {activeTab === "home" && (
+      <section>
       <div className="dashboard-row">
               {/* TASKS */}
-        <section>
-          <h2>✅ Tasks</h2>
-          <div className='content-scroll'>
-            {/* Render Task List */}
-            {[...taskList]
-              .sort((a, b) => a.completed - b.completed)
-              .map(task => (
-                <TaskItem 
-                  key={task.id} 
-                  task={task} 
-                  onDelete={handleDeleteTask}
-                  onEdit={handleEditTask}
-                  onToggleDone={handleToggleTaskDone}
-                />
-            ))}
-          </div>
-
-                    {/* Task Form (conditionally shown) */}
-          {showForm && (
-            <form onSubmit={handleAddTask} className="task-form">
-              <input
-                type="text"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                placeholder="Enter a new task..."
-                required
-              />
-              <button type="submit">Save</button>
-            </form>
-          )}
-                    {/* Toggle Button */}
-            <button onClick={() => setShowForm(!showForm)}>
-              {showForm ? "Cancel" : "Add Task"}
-            </button>
+        <section className="content-scroll">
+            <TasksSection 
+              taskList={taskList}
+              newTask={newTask}
+              setNewTask={setNewTask}
+              showForm={showForm}
+              setShowForm={setShowForm}
+              onAdd={handleAddTask}
+              onDelete={handleDeleteTask}
+              onEdit={handleEditTask}
+              onToggleDone={handleToggleTaskDone}
+            />
         </section>
 
 
@@ -276,8 +280,6 @@ function App() {
           )}
 
 
-
-
           {/* Render Events */}
           <div className='content-scroll'>
             <div className="event-list">
@@ -299,7 +301,8 @@ function App() {
             </div>
           </div>
         </section>
-
+      </section>
+    )}
     </>
   );
 }
