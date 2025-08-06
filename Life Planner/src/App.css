@@ -1,8 +1,20 @@
 #root {
-  max-width: 1200px;
+  width: 1100px;
+  max-width: 1200px ;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  min-height: 100vh;
+}
+
+button {
+  bottom: 20px;
+  right: 20px;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.2);
 }
 
 .logo {
@@ -113,6 +125,7 @@
       padding: 24px;
       border-radius: 12px;
       margin-bottom: 15px;  
+    
   }
 
   .planner-header h1 {

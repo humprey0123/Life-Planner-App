@@ -3,7 +3,7 @@ import TasksSection from './components/TaskSection';
 import tasks from './data/tasks';
 import GoalSection from './components/GoalSection';
 import goals from './data/goals';
-import EventCard from './components/EventCard';
+import EventsSection from './components/EventSection';
 import events from './data/events';
 import { useState, useEffect } from 'react';
 
@@ -138,57 +138,10 @@ function App() {
         </div>
       </header>
 
-    {activeTab === "tasks" && (
-      <section>
-        <div className='tab-scroll'>
-          <TasksSection
-            taskList={taskList}
-            newTask={newTask}
-            setNewTask={setNewTask}
-            showForm={showForm}
-            setShowForm={setShowForm}
-            onAdd={handleAddTask}
-            onDelete={handleDeleteTask}
-            onEdit={handleEditTask}
-            onToggleDone={handleToggleTaskDone}
-          />
-        </div>
-      </section>
-    )}
-
-        {activeTab === "goals" && (
-      <section>
-        <div className='tab-scroll'>
-          <GoalSection
-            goalList={goalList}
-            showGoalForm={showGoalForm}
-            setShowGoalForm={setShowGoalForm}
-            newGoalText={newGoalText}
-            setNewGoalText={setNewGoalText}
-            onAddGoal={(e) => {
-              e.preventDefault();
-              const newGoal = {
-                id: Date.now(),
-                goal: newGoalText,
-                progress: 0
-              };
-              setGoalList([newGoal, ...goalList]);
-              setNewGoalText('');
-              setShowGoalForm(false);
-            }}
-            onDeleteGoal={handleDeleteGoal}
-            onUpdateProgress={handleUpdateProgress}
-          />
-        </div>
-      </section>
-    )}
-
-    {activeTab === "home" && (
-      <section>
-      <div className="dashboard-row">
-              {/* TASKS */}
-        <section className="content-scroll">
-            <TasksSection 
+      {activeTab === "tasks" && (
+        <section>
+          <div className='tab-scroll'>
+            <TasksSection
               taskList={taskList}
               newTask={newTask}
               setNewTask={setNewTask}
@@ -199,110 +152,108 @@ function App() {
               onEdit={handleEditTask}
               onToggleDone={handleToggleTaskDone}
             />
-        </section>
-
-        <section className="content-scroll">
-              {/* GOALS */}
-          <GoalSection
-            goalList={goalList}
-            showGoalForm={showGoalForm}
-            setShowGoalForm={setShowGoalForm}
-            newGoalText={newGoalText}
-            setNewGoalText={setNewGoalText}
-            onAddGoal={(e) => {
-              e.preventDefault();
-              const newGoal = {
-                id: Date.now(),
-                goal: newGoalText,
-                progress: 0
-              };
-              setGoalList([newGoal, ...goalList]);
-              setNewGoalText('');
-              setShowGoalForm(false);
-            }}
-            onDeleteGoal={handleDeleteGoal}
-            onUpdateProgress={handleUpdateProgress}
-          />
-        </section>
-      </div>
-
-        <section>
-          <div className="section-header">
-            <h2>📅 Events</h2>
-            <button onClick={() => setShowEventForm(!showEventForm)}>
-              {showEventForm ? "Cancel" : "Add Event"}
-            </button>
-          </div>
-
-          {/* Event Form (toggleable) */}
-          {showEventForm && (
-            <div className="modal-overlay">
-              <div className="modal">
-                <h3>Add New Event</h3>
-                <form onSubmit={handleAddEvent} className="modal-form">
-                  <input
-                    type="text"
-                    value={newEvent.title}
-                    onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                    placeholder="Title"
-                    required
-                  />
-                  <input
-                    type="date"
-                    value={newEvent.date}
-                    onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
-                    required
-                  />
-                  <input
-                    type="text"
-                    value={newEvent.location}
-                    onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                    placeholder="Location"
-                  />
-                  <input
-                    type="url"
-                    value={newEvent.link}
-                    onChange={(e) => setNewEvent({ ...newEvent, link: e.target.value })}
-                    placeholder="Link"
-                  />
-                  <input
-                    type="url"
-                    value={newEvent.image}
-                    onChange={(e) => setNewEvent({ ...newEvent, image: e.target.value })}
-                    placeholder="Image URL"
-                  />
-                  <div className="modal-buttons">
-                    <button type="button" onClick={() => setShowEventForm(false)}>Cancel</button>
-                    <button type="submit">Save</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-
-
-          {/* Render Events */}
-          <div className='content-scroll'>
-            <div className="event-list">
-              {[...eventList]
-                .sort((a, b) => new Date(a.date) - new Date(b.date))
-                .map(event => (
-                  <EventCard
-                    key={event.id}
-                    id={event.id}
-                    image={event.image}
-                    title={event.title}
-                    date={event.date}
-                    location={event.location}
-                    link={event.link}
-                    onDelete={handleDeleteEvent}
-                    onEdit={handleEditEvent}
-                  />
-              ))}
-            </div>
           </div>
         </section>
-      </section>
+      )}
+
+        {activeTab === "goals" && (
+          <section>
+            <div className='tab-scroll'>
+              <GoalSection
+                goalList={goalList}
+                showGoalForm={showGoalForm}
+                setShowGoalForm={setShowGoalForm}
+                newGoalText={newGoalText}
+                setNewGoalText={setNewGoalText}
+                onAddGoal={(e) => {
+                  e.preventDefault();
+                  const newGoal = {
+                    id: Date.now(),
+                    goal: newGoalText,
+                    progress: 0
+                  };
+                  setGoalList([newGoal, ...goalList]);
+                  setNewGoalText('');
+                  setShowGoalForm(false);
+                }}
+                onDeleteGoal={handleDeleteGoal}
+                onUpdateProgress={handleUpdateProgress}
+              />
+            </div>
+          </section>
+        )}
+
+        {activeTab === "events" && (
+          <section>
+            <EventsSection
+              eventList={eventList}
+              newEvent={newEvent}
+              setNewEvent={setNewEvent}
+              showEventForm={showEventForm}
+              setShowEventForm={setShowEventForm}
+              onAddEvent={handleAddEvent}
+              onDeleteEvent={handleDeleteEvent}
+              onEditEvent={handleEditEvent}
+            />
+          </section>
+        )}
+
+        {activeTab === "home" && (
+          <section>
+          <div className="dashboard-row">
+                  {/* TASKS */}
+            <section className="content-scroll">
+                <TasksSection 
+                  taskList={taskList}
+                  newTask={newTask}
+                  setNewTask={setNewTask}
+                  showForm={showForm}
+                  setShowForm={setShowForm}
+                  onAdd={handleAddTask}
+                  onDelete={handleDeleteTask}
+                  onEdit={handleEditTask}
+                  onToggleDone={handleToggleTaskDone}
+                />
+            </section>
+
+            <section className="content-scroll">
+                  {/* GOALS */}
+              <GoalSection
+                goalList={goalList}
+                showGoalForm={showGoalForm}
+                setShowGoalForm={setShowGoalForm}
+                newGoalText={newGoalText}
+                setNewGoalText={setNewGoalText}
+                onAddGoal={(e) => {
+                  e.preventDefault();
+                  const newGoal = {
+                    id: Date.now(),
+                    goal: newGoalText,
+                    progress: 0
+                  };
+                  setGoalList([newGoal, ...goalList]);
+                  setNewGoalText('');
+                  setShowGoalForm(false);
+                }}
+                onDeleteGoal={handleDeleteGoal}
+                onUpdateProgress={handleUpdateProgress}
+              />
+            </section>
+          </div>
+
+          <section>
+            <EventsSection
+              eventList={eventList}
+              newEvent={newEvent}
+              setNewEvent={setNewEvent}
+              showEventForm={showEventForm}
+              setShowEventForm={setShowEventForm}
+              onAddEvent={handleAddEvent}
+              onDeleteEvent={handleDeleteEvent}
+              onEditEvent={handleEditEvent}
+            />
+          </section>
+        </section>
     )}
     </>
   );

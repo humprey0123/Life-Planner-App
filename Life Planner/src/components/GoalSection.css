@@ -58,7 +58,6 @@
 .content-scroll {
   max-height: 450px; /* adjust individually if needed via inline styles or another class */
   overflow-y: auto;
-  display: flex;
   flex-direction: column;
   gap: 12px;
   padding-right: 4px;
