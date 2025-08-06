@@ -92,3 +92,42 @@
 .content-scroll::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+.event-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  padding: 0 10px;
+  justify-content: center; /* Center the grid items horizontally */
+}
+
+/* Scrollbar styling */
+.event-list::-webkit-scrollbar {
+  height: 6px;
+}
+.event-list::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+/* Tablet view (≥ 768px) */
+@media (min-width: 768px) {
+  .event-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop view (≥ 1024px) */
+@media (min-width: 1024px) {
+  .event-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large screens (≥ 1280px) */
+@media (min-width: 1280px) {
+  .event-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
