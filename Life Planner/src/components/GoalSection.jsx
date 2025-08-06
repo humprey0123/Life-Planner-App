@@ -1,5 +1,4 @@
-// components/GoalsSection.jsx
-import './GoalCard.css';
+import './GoalSection.css';
 
 function GoalsSection({
   goalList,
