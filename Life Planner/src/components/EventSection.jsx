@@ -1,4 +1,4 @@
-import './EventCard.css';
+import './EventSection.css';
 import { useState } from 'react';
 
 function EventsSection({
