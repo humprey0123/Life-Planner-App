@@ -1,0 +1,116 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #121212e3; /* Very dark background */
+  color: #e0e0e0; /* Light text */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #121212; /* Very dark background */
+  color: #e0e0e0; /* Light text */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-box {
+  background-color: #1e1e1e; /* Slightly lighter than body */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.login-box input[type="text"],
+.login-box input[type="email"],
+.login-box input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-box input:focus {
+  outline: none;
+  border-color: #bb86fc; /* Purple accent */
+  background-color: #333;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #bb86fc; /* Purple primary */
+  color: #121212;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #9a66e9;
+}
+
+.login-box .register-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.login-box .register-link a {
+  color: #bb86fc;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.login-box .register-link a:hover {
+  color: #d0aaff;
+}
+
+.password-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.password-group input[type="password"],
+.password-group input[type="text"] {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #bb86fc;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+
+.toggle-password-btn:hover {
+  color: #d0aaff;
+}
