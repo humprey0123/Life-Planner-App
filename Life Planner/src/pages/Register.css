@@ -1,0 +1,83 @@
+/* Dark mode styles for Register.jsx */
+.register-container {
+    background-color: #121212;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+}
+
+.register-box {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    width: 100%;
+    max-width: 400px;
+}
+
+.register-title {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
+
+.register-form label {
+    color: #cccccc;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.register-form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #2b2b2b;
+    color: #ffffff;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.register-form input:focus {
+    border-color: #4cafef;
+    box-shadow: 0 0 5px rgba(76, 175, 239, 0.6);
+}
+
+.register-button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #4cafef;
+    color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: #3794d2;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 15px;
+    color: #aaaaaa;
+    font-size: 0.9rem;
+}
+
+.register-link a {
+    color: #4cafef;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
