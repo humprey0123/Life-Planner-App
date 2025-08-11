@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import './TaskSection.css';
 
-function TasksSection({ taskList, newTask, setNewTask, showForm, setShowForm, onAdd, onDelete, onEdit, onToggleDone }) {
+function TaskSection({ taskList, newTask, setNewTask, showForm, setShowForm, onAdd, onDelete, onEdit, onToggleDone }) {
   return (
     <>
       <h2>✅ Tasks</h2>
@@ -75,4 +75,4 @@ function TaskItem({ task, onDelete, onEdit, onToggleDone }) {
   );
 }
 
-export default TasksSection;
+export default TaskSection;

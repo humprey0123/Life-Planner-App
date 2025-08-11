@@ -1,7 +1,7 @@
 import './EventSection.css';
 import { useState } from 'react';
 
-function EventsSection({
+function EventSection({
   eventList,
   newEvent,
   setNewEvent,
@@ -168,4 +168,4 @@ function EventCard({ id, image, title, date, location, link, onDelete, onEdit })
   );
 }
 
-export default EventsSection;
+export default EventSection;
