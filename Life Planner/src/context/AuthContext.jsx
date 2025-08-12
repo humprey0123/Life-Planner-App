@@ -1,5 +1,5 @@
 // /src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { fakeUsers } from "../data/fakeUsers";
 
 export const AuthContext = createContext();

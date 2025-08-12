@@ -1,5 +1,6 @@
 // /src/pages/Login.jsx
-import React, { useState, useContext } from "react";
+import './login.css'; 
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -21,7 +22,7 @@ export default function Login() {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Login</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
