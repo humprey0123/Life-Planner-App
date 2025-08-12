@@ -7,6 +7,14 @@
   min-height: 100vh;
 }
 
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 button {
   bottom: 20px;
   right: 20px;
