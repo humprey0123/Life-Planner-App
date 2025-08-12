@@ -1,7 +1,8 @@
 // /src/pages/Register.jsx
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import './register.css';
 
 export default function Register() {
   const { register } = useContext(AuthContext);
@@ -22,7 +23,7 @@ export default function Register() {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleSubmit}>
