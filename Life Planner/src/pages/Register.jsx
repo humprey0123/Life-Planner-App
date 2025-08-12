@@ -1,4 +1,3 @@
-// /src/pages/Register.jsx
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -16,7 +15,7 @@ export default function Register() {
     e.preventDefault();
     const success = register(email, password, name);
     if (success) {
-      navigate("/dashboard");
+      navigate("/login");
     } else {
       setError("Email already exists");
     }
