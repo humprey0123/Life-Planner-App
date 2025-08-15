@@ -1,46 +1,53 @@
-// /src/context/AuthContext.jsx
 import { createContext, useState, useEffect } from "react";
-import { fakeUsers } from "../data/fakeUsers";
+import { auth } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  // Load from localStorage
+  // Listen for authentication changes
   useEffect(() => {
-    const storedUser = localStorage.getItem("currentUser");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
   }, []);
 
-  // Login
-  const login = (email, password) => {
-    const foundUser = fakeUsers.find(
-      (u) => u.email === email && u.password === password
-    );
-    if (foundUser) {
-      setUser(foundUser);
-      localStorage.setItem("currentUser", JSON.stringify(foundUser));
+  // Register
+  const register = async (email, password, name) => {
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Update displayName after registration
+      await user.updateProfile({ displayName: name });
       return true;
+    } catch (error) {
+      console.error(error);
+      return false;
     }
-    return false;
   };
 
-  // Register
-  const register = (email, password, name) => {
-    const exists = fakeUsers.find((u) => u.email === email);
-    if (exists) return false;
-    const newUser = { id: Date.now(), email, password, name };
-    fakeUsers.push(newUser);
-    setUser(newUser);
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
-    return true;
+  // Login
+  const login = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   };
 
   // Logout
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("currentUser");
+  const logout = async () => {
+    await signOut(auth);
   };
 
   return (
