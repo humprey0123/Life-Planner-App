@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  updateProfile
 } from "firebase/auth";
 
 export const AuthContext = createContext();
@@ -23,13 +24,11 @@ export function AuthProvider({ children }) {
   // Register
   const register = async (email, password, name) => {
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
-
-      // Update displayName after registration
-      await user.updateProfile({ displayName: name });
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userCredential.user, { displayName: name });
       return true;
     } catch (error) {
-      console.error(error);
+      console.error("Registration error:", error);
       return false;
     }
   };

@@ -142,7 +142,7 @@ function Dashboard() {
           <button onClick={() => setActiveTab("events")}>📅 Events</button>
         </div>
         <div className="user-info">
-          <p>Welcome, {user?.name}</p>
+          <p>{user?.displayName || user?.email}</p>
           <button onClick={logout}>Logout</button>
         </div>
       </header>
