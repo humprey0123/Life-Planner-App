@@ -77,7 +77,8 @@ button {
   border-radius: 12px;
   margin-bottom: 30px;
   flex-wrap: wrap; /* allow wrapping if needed */
-  box-shadow: 0 3px 5px rgba(70, 70, 70, 0.2);
+  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000; /* ensure it stays above other content */
 }
 
 .planner-header h1 {
@@ -124,6 +125,7 @@ button {
 
 @media (min-width: 768px) {
   .planner-header {
+      position: sticky;
       flex-wrap: wrap;
       display: flex;
       justify-content: space-between;
@@ -133,7 +135,8 @@ button {
       color: white;
       padding: 20px;
       border-radius: 12px;
-      margin-bottom: 15px;  
+      margin-bottom: 15px;
+      top: 0;  
     
   }
 
