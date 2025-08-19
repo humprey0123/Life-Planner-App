@@ -2,24 +2,50 @@ import EventSection from "../components/EventSection";
 import GoalSection from "../components/GoalSection";
 import TaskSection from "../components/TaskSection";
 import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../context/AuthContext"; // ✅ IMPORTED
+import { AuthContext } from "../context/AuthContext";
 import './Dashboard.css';
+import { db } from "../firebase";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+  query,
+  where
+} from "firebase/firestore";
 
 function Dashboard() {
   const { user, logout } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("home");
 
-  // Defined Task List
+  // TASK STATE
+  const [taskList, setTaskList] = useState([]);
+  const [newTask, setNewTask] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [taskList, setTaskList] = useState(() => {
-    const savedTasks = localStorage.getItem("lifeplanner-tasks");
-    return savedTasks ? JSON.parse(savedTasks) : []; // ✅ FIX: replaced `tasks` with []
-  });
+  
+  // Fetch tasks from Firestore
+  useEffect(() => {
+    if (!user) return;
 
-  // Defined Goal List
+    const fetchTasks = async () => {
+      const q = query(collection(db, "tasks"), where("uid", "==", user.uid));
+      const snapshot = await getDocs(q);
+      const tasksData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTaskList(tasksData);
+    };
+
+    fetchTasks();
+  }, [user]);
+
+  // Goal List State
   const [goalList, setGoalList] = useState(() => {
     const savedGoals = localStorage.getItem("lifeplanner-goals");
-    return savedGoals ? JSON.parse(savedGoals) : []; // ✅ FIX
+    return savedGoals ? JSON.parse(savedGoals) : [];
   });
   const [showGoalForm, setShowGoalForm] = useState(false);
   const [newGoalText, setNewGoalText] = useState("");
@@ -27,7 +53,7 @@ function Dashboard() {
   // Defined Event List
   const [eventList, setEventList] = useState(() => {
     const savedEvents = localStorage.getItem("lifeplanner-events");
-    return savedEvents ? JSON.parse(savedEvents) : []; // ✅ FIX
+    return savedEvents ? JSON.parse(savedEvents) : []; 
   });
 
   // Save for Event List to Local Storage
@@ -44,52 +70,71 @@ function Dashboard() {
     image: "",
   });
 
-  // Save for Task List to Local Storage
-  useEffect(() => {
-    localStorage.setItem("lifeplanner-tasks", JSON.stringify(taskList));
-  }, [taskList]);
-
-  const [newTask, setNewTask] = useState("");
-
   // Save for Goal List to Local Storage
   useEffect(() => {
     localStorage.setItem("lifeplanner-goals", JSON.stringify(goalList));
   }, [goalList]);
 
-  // ✅ TASK FUNCTIONS
-  function handleToggleTaskDone(id) {
+  // Toggle task check
+  async function handleToggleTaskDone(id, currentValue) {
+    await updateDoc(doc(db, "tasks", id), { completed: !currentValue });
     setTaskList(
       taskList.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
+        task.id === id ? { ...task, completed: !currentValue } : task
       )
     );
   }
 
-  function handleAddTask(e) {
+  // Add task Firebase
+  async function handleAddTask(e) {
     e.preventDefault();
-    const newTaskObj = {
-      id: Date.now(),
-      text: newTask,
-      completed: false,
-    };
-    setTaskList([newTaskObj, ...taskList]);
-    setNewTask("");
-    setShowForm(false);
+    if (!newTask.trim()) return;
+    if (!user) {
+      alert("You must be logged in to add tasks.");
+      return;
+    }
+
+    try {
+      const docRef = await addDoc(collection(db, "tasks"), {
+        text: newTask,
+        completed: false,
+        uid: user.uid,
+        createdAt: Date.now(),
+      });
+
+      setTaskList([{ id: docRef.id, text: newTask, completed: false }, ...taskList]);
+      setNewTask("");
+      setShowForm(false);
+    } catch (err) {
+      console.error("Error adding task:", err);
+      alert("Failed to add task. Check the console for details.");
+    }
   }
 
-  function handleDeleteTask(id) {
+  // Delete task
+  async function handleDeleteTask(id) {
+    await deleteDoc(doc(db, "tasks", id));
     setTaskList(taskList.filter((task) => task.id !== id));
   }
 
-  function handleEditTask(id, newText) {
-    setTaskList(
-      taskList.map((task) =>
-        task.id === id ? { ...task, text: newText } : task
-      )
-    );
+  // Edit task
+  async function handleEditTask(id, newText) {
+    try {
+      const taskRef = doc(db, "tasks", id);
+      await updateDoc(taskRef, { text: newText });
+
+      setTaskList(
+        taskList.map((task) =>
+          task.id === id ? { ...task, text: newText } : task
+        )
+      );
+    } catch (error) {
+      console.error("Error editing task:", error);
+      alert("Failed to update task. Check console for details.");
+    }
   }
 
-  // ✅ GOAL FUNCTIONS
+  // GOAL FUNCTIONS
   function handleDeleteGoal(id) {
     setGoalList(goalList.filter((goal) => goal.id !== id));
   }
@@ -107,7 +152,7 @@ function Dashboard() {
     );
   }
 
-  // ✅ EVENT FUNCTIONS
+  // EVENT FUNCTIONS
   function handleAddEvent(e) {
     e.preventDefault();
     const newEventObj = {
@@ -158,7 +203,10 @@ function Dashboard() {
             onAdd={handleAddTask}
             onDelete={handleDeleteTask}
             onEdit={handleEditTask}
-            onToggleDone={handleToggleTaskDone}
+            onToggleDone={(id) => {
+              const t = taskList.find((task) => task.id === id);
+              handleToggleTaskDone(id, t.completed);
+              }}
           />
         </section>
       )}
@@ -216,7 +264,10 @@ function Dashboard() {
                 onAdd={handleAddTask}
                 onDelete={handleDeleteTask}
                 onEdit={handleEditTask}
-                onToggleDone={handleToggleTaskDone}
+                onToggleDone={(id) => {
+                  const t = taskList.find((task) => task.id === id);
+                  handleToggleTaskDone(id, t.completed);
+                  }}
               />
             </section>
 

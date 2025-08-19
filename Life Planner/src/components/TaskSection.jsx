@@ -7,15 +7,19 @@ function TaskSection({ taskList, newTask, setNewTask, showForm, setShowForm, onA
     <>
       <h2>✅ Tasks</h2>
       <div>
-        {taskList.map(task => (
-          <TaskItem 
-            key={task.id}
-            task={task}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            onToggleDone={onToggleDone}
-          />
-        ))}
+        {taskList.length === 0 ? (
+          <p style={{ textAlign: "left" }}>Add your first Task!</p>
+        ) : (
+          taskList.map(task => (
+            <TaskItem 
+              key={task.id}
+              task={task}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              onToggleDone={onToggleDone}
+            />
+          ))
+        )}
       </div>
 
       {showForm && (
@@ -74,5 +78,6 @@ function TaskItem({ task, onDelete, onEdit, onToggleDone }) {
     </div>
   );
 }
-
 export default TaskSection;
+
+
