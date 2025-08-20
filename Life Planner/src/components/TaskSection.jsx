@@ -8,7 +8,7 @@ function TaskSection({ taskList, newTask, setNewTask, showForm, setShowForm, onA
       <h2>✅ Tasks</h2>
       <div>
         {taskList.length === 0 ? (
-          <p style={{ textAlign: "left" }}>Add your first Task!</p>
+          <h3 style={{ textAlign: "left" }}>Add your first Task!</h3>
         ) : (
           taskList.map(task => (
             <TaskItem 

@@ -50,17 +50,8 @@ function Dashboard() {
   const [showGoalForm, setShowGoalForm] = useState(false);
   const [newGoalText, setNewGoalText] = useState("");
 
-  // Defined Event List
-  const [eventList, setEventList] = useState(() => {
-    const savedEvents = localStorage.getItem("lifeplanner-events");
-    return savedEvents ? JSON.parse(savedEvents) : []; 
-  });
-
-  // Save for Event List to Local Storage
-  useEffect(() => {
-    localStorage.setItem("lifeplanner-events", JSON.stringify(eventList));
-  }, [eventList]);
-
+  // EVENT STATE
+  const [eventList, setEventList] = useState([]);
   const [showEventForm, setShowEventForm] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: "",
@@ -70,11 +61,29 @@ function Dashboard() {
     image: "",
   });
 
+  // Fetch events from Firestore
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchEvents = async () => {
+      const q = query(collection(db, "events"), where("uid", "==", user.uid));
+      const snapshot = await getDocs(q);
+      const eventsData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setEventList(eventsData);
+    };
+
+    fetchEvents();
+  }, [user]);
+
   // Save for Goal List to Local Storage
   useEffect(() => {
     localStorage.setItem("lifeplanner-goals", JSON.stringify(goalList));
   }, [goalList]);
 
+  // TASK FUNCTIONS
   // Toggle task check
   async function handleToggleTaskDone(id, currentValue) {
     await updateDoc(doc(db, "tasks", id), { completed: !currentValue });
@@ -153,29 +162,57 @@ function Dashboard() {
   }
 
   // EVENT FUNCTIONS
-  function handleAddEvent(e) {
+  // Add event
+  async function handleAddEvent(e) {
     e.preventDefault();
-    const newEventObj = {
-      id: Date.now(),
-      ...newEvent,
-    };
-    setEventList([newEventObj, ...eventList]);
-    setNewEvent({ title: "", date: "", location: "", link: "", image: "" });
-    setShowEventForm(false);
+    if (!user) {
+      alert("You must be logged in to add events.");
+      return;
+    }
+
+    try {
+      const docRef = await addDoc(collection(db, "events"), {
+        ...newEvent,
+        uid: user.uid,
+        createdAt: Date.now(),
+      });
+
+      setEventList([{ id: docRef.id, ...newEvent }, ...eventList]);
+      setNewEvent({ title: "", date: "", location: "", link: "", image: "" });
+      setShowEventForm(false);
+    } catch (err) {
+      console.error("Error adding event:", err);
+      alert("Failed to add event. Check the console for details.");
+    }
   }
 
-  function handleDeleteEvent(id) {
-    setEventList(eventList.filter((event) => event.id !== id));
+  // Delete event
+  async function handleDeleteEvent(id) {
+    try {
+      await deleteDoc(doc(db, "events", id));
+      setEventList(eventList.filter((event) => event.id !== id));
+    } catch (err) {
+      console.error("Error deleting event:", err);
+      alert("Failed to delete event.");
+    }
   }
 
-  function handleEditEvent(id, updatedEvent) {
-    setEventList((prevList) =>
-      prevList.map((event) =>
+  //Edit event
+  async function handleEditEvent(id, updatedEvent) {
+    try {
+      const eventRef = doc(db, "events", id);
+      await updateDoc(eventRef, updatedEvent);
+
+      setEventList(eventList.map((event) =>
         event.id === id ? { ...event, ...updatedEvent } : event
-      )
-    );
+      ));
+    } catch (err) {
+      console.error("Error editing event:", err);
+      alert("Failed to edit event.");
+    }
   }
 
+  // Render the dashboard
   return (
     <>
       <header className="planner-header">

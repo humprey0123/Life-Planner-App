@@ -25,19 +25,33 @@ function EventSection({
         <div className="modal-overlay">
           <div className="modal">
             <h3>Add New Event</h3>
-            <form onSubmit={onAddEvent} className="modal-form">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (
+                  !newEvent.title ||
+                  !newEvent.date ||
+                  !newEvent.location ||
+                  !newEvent.link ||
+                  !newEvent.image
+                ) {
+                  alert("⚠️ Please fill in all fields before saving.");
+                  return;
+                }
+                onAddEvent(e);
+              }}
+              className="modal-form"
+            >
               <input
                 type="text"
                 value={newEvent.title}
                 onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
                 placeholder="Title"
-                required
               />
               <input
                 type="date"
                 value={newEvent.date}
                 onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
-                required
               />
               <input
                 type="text"
@@ -68,18 +82,22 @@ function EventSection({
 
       {/* Event List */}
       <div className="content-scroll">
-        <div className="event-list">
-          {[...eventList]
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
-            .map(event => (
-              <EventCard
-                key={event.id}
-                {...event}
-                onDelete={onDeleteEvent}
-                onEdit={onEditEvent}
-              />
-            ))}
-        </div>
+        {eventList.length === 0 ? (
+          <div className="no-events"><h3>No events yet</h3></div>
+        ) : (
+          <div className="event-list">
+            {[...eventList]
+              .sort((a, b) => new Date(a.date) - new Date(b.date))
+              .map(event => (
+                <EventCard
+                  key={event.id}
+                  {...event}
+                  onDelete={onDeleteEvent}
+                  onEdit={onEditEvent}
+                />
+              ))}
+          </div>
+        )}
       </div>
     </>
   );
@@ -129,12 +147,27 @@ function EventCard({ id, image, title, date, location, link, onDelete, onEdit })
         <div className="modal-overlay">
           <div className="modal">
             <h3>Edit Event</h3>
-            <form className="modal-form" onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+            <form
+              className="modal-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (
+                  !editEvent.title ||
+                  !editEvent.date ||
+                  !editEvent.location ||
+                  !editEvent.link ||
+                  !editEvent.image
+                ) {
+                  alert("⚠️ Please fill in all fields before saving.");
+                  return;
+                }
+                handleSave();
+              }}
+            >
               <input
                 type="text"
                 value={editEvent.title}
                 onChange={(e) => setEditEvent({ ...editEvent, title: e.target.value })}
-                required
               />
               <input
                 type="date"
