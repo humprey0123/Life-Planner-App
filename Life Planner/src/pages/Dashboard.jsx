@@ -13,7 +13,9 @@ import {
   doc,
   updateDoc,
   query,
-  where
+  where,
+  onSnapshot,
+  serverTimestamp
 } from "firebase/firestore";
 
 function Dashboard() {
@@ -43,12 +45,38 @@ function Dashboard() {
   }, [user]);
 
   // Goal List State
-  const [goalList, setGoalList] = useState(() => {
-    const savedGoals = localStorage.getItem("lifeplanner-goals");
-    return savedGoals ? JSON.parse(savedGoals) : [];
-  });
+  const [goalList, setGoalList] = useState([]);
   const [showGoalForm, setShowGoalForm] = useState(false);
   const [newGoalText, setNewGoalText] = useState("");
+
+  // Fetch goals from Firestore
+  useEffect(() => {
+    if (!user) return;
+
+    const q = query(collection(db, "goals"), where("uid", "==", user.uid));
+    // Real-time listener
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const items = snap.docs.map((d) => {
+          const data = d.data();
+          // Normalize: accept old docs with `text`, default progress to 0
+          return {
+            id: d.id,
+            goal: data.goal ?? data.text ?? "",
+            progress: typeof data.progress === "number" ? data.progress : 0,
+            ...data,
+          };
+        });
+        setGoalList(items);
+      },
+      (err) => console.error("onSnapshot(goals) error:", err)
+    );
+
+    return unsub;
+  }, [user]);
+
+
 
   // EVENT STATE
   const [eventList, setEventList] = useState([]);
@@ -78,11 +106,6 @@ function Dashboard() {
     fetchEvents();
   }, [user]);
 
-  // Save for Goal List to Local Storage
-  useEffect(() => {
-    localStorage.setItem("lifeplanner-goals", JSON.stringify(goalList));
-  }, [goalList]);
-
   // TASK FUNCTIONS
   // Toggle task check
   async function handleToggleTaskDone(id, currentValue) {
@@ -93,7 +116,6 @@ function Dashboard() {
       )
     );
   }
-
   // Add task Firebase
   async function handleAddTask(e) {
     e.preventDefault();
@@ -119,13 +141,11 @@ function Dashboard() {
       alert("Failed to add task. Check the console for details.");
     }
   }
-
   // Delete task
   async function handleDeleteTask(id) {
     await deleteDoc(doc(db, "tasks", id));
     setTaskList(taskList.filter((task) => task.id !== id));
   }
-
   // Edit task
   async function handleEditTask(id, newText) {
     try {
@@ -144,21 +164,47 @@ function Dashboard() {
   }
 
   // GOAL FUNCTIONS
-  function handleDeleteGoal(id) {
-    setGoalList(goalList.filter((goal) => goal.id !== id));
-  }
+  // Add goal
+  async function handleAddGoal(e) {
+    e.preventDefault();
+    if (!newGoalText.trim()) return;
+    if (!user) return alert("You must be logged in to add goals.");
 
-  function handleUpdateProgress(id, amount) {
-    setGoalList((prevGoals) =>
-      prevGoals.map((goal) =>
-        goal.id === id
-          ? {
-              ...goal,
-              progress: Math.max(0, Math.min(100, goal.progress + amount)),
-            }
-          : goal
-      )
-    );
+    try {
+      await addDoc(collection(db, "goals"), {
+        goal: newGoalText,
+        progress: 0,
+        uid: user.uid,
+        createdAt: serverTimestamp(),
+      });
+      setNewGoalText("");
+      setShowGoalForm(false);
+    } catch (err) {
+      console.error("Error adding goal:", err);
+      alert("Failed to add goal. Check the console.");
+    }
+  }
+  // Delete goal
+  async function handleDeleteGoal(id) {
+    try {
+      await deleteDoc(doc(db, "goals", id));
+    } catch (err) {
+      console.error("Error deleting goal:", err);
+      alert("Failed to delete goal.");
+    }
+  }
+  // Update goal progress
+  async function handleUpdateProgress(id, delta) {
+    try {
+      const g = goalList.find((x) => x.id === id);
+      if (!g) return;
+
+      const next = Math.max(0, Math.min(100, (g.progress ?? 0) + delta));
+      await updateDoc(doc(db, "goals", id), { progress: next });
+    } catch (err) {
+      console.error("Error updating progress:", err);
+      alert("Failed to update progress.");
+    }
   }
 
   // EVENT FUNCTIONS
@@ -256,19 +302,9 @@ function Dashboard() {
             setShowGoalForm={setShowGoalForm}
             newGoalText={newGoalText}
             setNewGoalText={setNewGoalText}
-            onAddGoal={(e) => {
-              e.preventDefault();
-              const newGoal = {
-                id: Date.now(),
-                goal: newGoalText,
-                progress: 0,
-              };
-              setGoalList([newGoal, ...goalList]);
-              setNewGoalText("");
-              setShowGoalForm(false);
-            }}
-            onDeleteGoal={handleDeleteGoal}
-            onUpdateProgress={handleUpdateProgress}
+            onAddGoal={handleAddGoal}          // ✅ use Firestore handler
+            onDeleteGoal={handleDeleteGoal}    // ✅ Firestore delete
+            onUpdateProgress={handleUpdateProgress}  // ✅ Firestore update
           />
         </section>
       )}
@@ -315,19 +351,9 @@ function Dashboard() {
                 setShowGoalForm={setShowGoalForm}
                 newGoalText={newGoalText}
                 setNewGoalText={setNewGoalText}
-                onAddGoal={(e) => {
-                  e.preventDefault();
-                  const newGoal = {
-                    id: Date.now(),
-                    goal: newGoalText,
-                    progress: 0,
-                  };
-                  setGoalList([newGoal, ...goalList]);
-                  setNewGoalText("");
-                  setShowGoalForm(false);
-                }}
-                onDeleteGoal={handleDeleteGoal}
-                onUpdateProgress={handleUpdateProgress}
+                onAddGoal={handleAddGoal}          // ✅ use Firestore handler
+                onDeleteGoal={handleDeleteGoal}    // ✅ Firestore delete
+                onUpdateProgress={handleUpdateProgress}  // ✅ Firestore update
               />
             </section>
           </div>
