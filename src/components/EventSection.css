@@ -1,0 +1,111 @@
+.event-card {
+  background: #171717;
+  padding: 16px;
+  border: 1px solid #2d2d2d;
+  border-radius: 8px;
+  max-width: 250px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin: 16 16px 16px 16px;
+}
+
+.event-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 5px;
+  max-height: 200px;
+  min-height: 200px;
+}
+
+.event-card a {
+  display: inline-block;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.event-card h3 {
+  margin: 8px 0;
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+.eventcard button{
+  display: inline-block;
+}
+.event-card p,
+.event-card h4,
+.event-card a {
+  margin: 4px 0; /* reduce vertical spacing */
+  font-size: 0.95rem; /* optional: adjust font size */
+  line-height: 1.3;    /* tighter line spacing */
+}
+
+.event-card a{
+  display: block;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: zoom-out;
+}
+
+
+.event-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  padding: 0 10px;
+  justify-content: center; /* Center the grid items horizontally */
+}
+
+/* Scrollbar styling */
+.event-list::-webkit-scrollbar {
+  height: 6px;
+}
+.event-list::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+/* Tablet view (≥ 768px) */
+@media (min-width: 768px) {
+  .event-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop view (≥ 1024px) */
+@media (min-width: 1024px) {
+  .event-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large screens (≥ 1280px) */
+@media (min-width: 1280px) {
+  .event-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
